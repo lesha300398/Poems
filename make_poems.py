@@ -41,7 +41,7 @@ def make_rhymed_lines(poem_lines, max_attempts):
 
                 syllable_words = split_syllables_into_words(poem_line.syllables)
                 word_line = []
-                for i_word, syllable_word in enumerate(syllable_words):
+                for i_word, syllable_word in reversed(list(enumerate(syllable_words))):
 
                     query = session.query(Word).filter(Word.syllables == syllable_word)
                     if i_word == len(syllable_words) - 1 and tail is not None:
@@ -54,7 +54,8 @@ def make_rhymed_lines(poem_lines, max_attempts):
                     word_line.append(word)
                     if i_word == len(syllable_words) - 1:
                         tail = word.tail
-                        word_lines.append(word_line)
+                    if i_word == 0:
+                        word_lines.append(list(reversed(word_line)))
             for i, poem_line in enumerate(poem_lines):
                 poem_line.words = word_lines[i]
             return
@@ -90,19 +91,27 @@ def generate_poem(words_to_include, syllables_template, rhyme_template, max_atte
 # print(len(result))
 # # for w in map(lambda x: x.name, result):
 # #     print(w)
+# print(generate_poem(words_to_include='',
+#                     syllables_template= "/__/__/_\n"+
+#                                         "/__/__/\n" +
+#                                         "/__/__/_/__/__/\n" +
+#                                         "/__/__/_\n" +
+#                                         "/__/__/\n" +
+#                                         "/__/__/_\n" +
+#                                         "___/__/"
+#
+#                     ,
+#                     rhyme_template='abbcdcd',
+#                     max_attempts=50))
 print(generate_poem(words_to_include='',
-                    syllables_template= "/__/__/_\n"+
-                                        "/__/__/\n" +
-                                        "/__/__/_/__/__/\n" +
-                                        "/__/__/_\n" +
-                                        "/__/__/\n" +
-                                        "/__/__/_\n" +
-                                        "___/__/"
+                    syllables_template="_/_/_/_/\n" +
+                                       "_/_/___/_\n" +
+                                       "_/_/___/_\n" +
+                                       "_/_/___/"
 
                     ,
-                    rhyme_template='abbcdcd',
+                    rhyme_template='abba',
                     max_attempts=50))
-
 
 # "/__/__/_\n"+
 # "/__/__/\n" +

@@ -49,6 +49,7 @@ def get_tail(word, syllables):
 def read():
     folder = "words_json"
     session = sql.DBSession()
+    counter = 0
     for file_name in listdir(folder):
         print(file_name)
         with open(join(folder, file_name), encoding='utf8') as json_file:
@@ -61,51 +62,53 @@ def read():
                 stress = entry['stress']
                 syntax = entry['syntax']
                 part = syntax['part']
-
+                if syntax['original'] != syntax['part']:
+                    continue
                 if part == 'іменник':
                     gender = syntax['gender']
                     details = entry['details']
-                    singular = details['singular']
-                    plural = details['plural']
+                    singular = details['singular'] if 'singular' in details else None
+                    plural = details['plural'] if 'plural' in details else None
                     base = None
-                    for i, form_name in enumerate(singular):
-                        if form_name == ' ':
-                            continue
-                        word_model = Word()
-                        syllables, form_name = get_syllables(form_name, stress=None)
-                        word_model.name = form_name
-                        word_model.syllables = syllables
-                        word_model.tail = get_tail(form_name, syllables)
-                        word_model.part = part
-                        word_model.gender = gender
-                        word_model.form = i
-                        if base is None:
-                            base = word_model
+                    if singular:
+                        for i, form_name in enumerate(singular):
+                            if form_name == ' ':
+                                continue
+                            word_model = Word()
+                            syllables, form_name = get_syllables(form_name, stress=None)
+                            word_model.name = form_name
+                            word_model.syllables = syllables
+                            word_model.tail = get_tail(form_name, syllables)
+                            word_model.part = part
+                            word_model.gender = gender
+                            word_model.form = i
+                            if base is None:
+                                base = word_model
 
-                        else:
-                            word_model.base = base
-                        # print(part)
-                        session.add(word_model)
+                            else:
+                                word_model.base = base
+                            # print(part)
+                            session.add(word_model)
 
+                    if plural:
+                        for i, form_name in enumerate(plural):
+                            if form_name == ' ':
+                                continue
+                            word_model = Word()
+                            syllables, form_name = get_syllables(form_name, stress=None)
+                            word_model.name = form_name
+                            word_model.syllables = syllables
+                            word_model.tail = get_tail(form_name, syllables)
+                            word_model.part = part
+                            word_model.gender = "plural"
+                            word_model.form = i
 
-                    for i, form_name in enumerate(plural):
-                        if form_name == ' ':
-                            continue
-                        word_model = Word()
-                        syllables, form_name = get_syllables(form_name, stress=None)
-                        word_model.name = form_name
-                        word_model.syllables = syllables
-                        word_model.tail = get_tail(form_name, syllables)
-                        word_model.part = part
-                        word_model.gender = "plural"
-                        word_model.form = i
+                            if base is None:
+                                base = word_model
+                            else:
+                                word_model.base = base
 
-                        if base is None:
-                            base = word_model
-                        else:
-                            word_model.base = base
-
-                        session.add(word_model)
+                            session.add(word_model)
 
 
                 elif part == 'прикметник':
@@ -133,9 +136,10 @@ def read():
 
                 elif part == 'дієслово':
                     pass
-
-                session.commit()
-
+                counter += 1
+                if counter % 500 == 0:
+                    session.commit()
+            session.commit()
             for word in session.query(Word).filter(Word.base_id == None).all():
                 word.base_id = word.id
             session.commit()
