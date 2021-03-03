@@ -219,18 +219,18 @@ class Dictionary:
         if(part == "іменник"):
             vidm = (info['vidm'],) if 'vidm' in info else range(7);
             gender = (info['gender'],) if 'gender' in info else range(4);
-            res  = (d.get_noun_rhymes(vidm,gender, real_syll,real_end,False))[:-1];
+            res  = (self.get_noun_rhymes(vidm,gender, real_syll,real_end,False))[:-1];
         elif(part == "прикметник"):
             vidm = (info['vidm'],) if 'vidm' in info else range(7);
             gender = (info['gender'],) if 'gender' in info else range(4);
-            res  = (d.get_adj_rhymes(vidm,gender, real_syll,real_end,True))[:-1];
+            res  = (self.get_adj_rhymes(vidm,gender, real_syll,real_end,True))[:-1];
         elif(part == "дієслово"):
             persons = (info['persons'],) if 'persons' in info else range(3);
             gender = (info['gender'],) if 'gender' in info else range(4);
             time = (info['time'],) if 'time' in info else range(4) #ignored
-            res  = (d.get_verb_rhymes(persons,gender,time, real_syll,real_end,True))[:-1];
+            res  = (self.get_verb_rhymes(persons,gender,time, real_syll,real_end,True))[:-1];
         elif(part in ["незмінне", "прийменник", "частка", "вигук","присудкове", "сполучник", "сполука", "вставне", "дієприслівник", "прислівник"]):
-            res  = (d.get_other_rhymes(part, real_syll,real_end))[-1];
+            res  = (self.get_other_rhymes(part, real_syll,real_end))[-1];
 
         return res;
     @staticmethod

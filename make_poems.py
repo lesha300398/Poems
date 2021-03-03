@@ -15,7 +15,7 @@ class PoemLine:
         self.words = None
 
     def __str__(self):
-        return ' '.join([w.name for w in self.words])
+        return ' '.join([w.name if w is Word else w[0] for w in self.words])
 
 
 class MorphUnit:
@@ -139,7 +139,10 @@ def get_morph(n_words):
                               "time": np.random.choice(range(3))})]
     weights = dict(zip(["іменник", "прикметник", "дієслово", "дієприслівник", "прислівник"], [5,4,5,1,1]))
     while len(result) < n_words:
-        index = np.random.choice(range(len(result)), p=[weights[x] for x in result])
+        weights_result = [weights[x.part] for x in result]
+        weights_result = np.array(weights_result)
+        weights_result = weights_result / np.ndarray.sum(weights_result)
+        index = np.random.choice(range(len(result)), p=weights_result)
         offset = np.random.choice([0, 1])
         result.insert(index + offset, result[index].generate_another())
     return result
@@ -161,13 +164,20 @@ def make_rhymed_lines_new(poem_lines, max_attempts, words_to_include):
                     morph_unit = morph_words[i_word]
                     query_result = _d.get_words(part=morph_unit.part, info=morph_unit.info, ending=tail, syllables=syllable_word )
 
+
                     if not query_result:
                         raise NoWordsError
-                    word = query_result[np.random.randint(len(query_result))]
+                    words_to_use = set([x for x in words_to_include if words_to_include[x]])
+                    weights = [len(query_result) if res[1] in words_to_use else 1 for res in query_result]
+                    weights = np.array(weights)
+                    weights = weights / np.ndarray.sum(weights)
+
+                    index = np.random.choice(range(len(query_result)), p=weights)
+                    word = query_result[index]
 
                     word_line.append(word)
                     if i_word == len(syllable_words) - 1:
-                        tail = word.tail
+                        tail = word[2]
                     if i_word == 0:
                         word_lines.append(list(reversed(word_line)))
             for i, poem_line in enumerate(poem_lines):
@@ -206,18 +216,18 @@ _d = Dictionary()
 # print(len(result))
 # # for w in map(lambda x: x.name, result):
 # #     print(w)
-# print(generate_poem(words_to_include='',
-#                     syllables_template= "/__/__/_\n"+
-#                                         "/__/__/\n" +
-#                                         "/__/__/_/__/__/\n" +
-#                                         "/__/__/_\n" +
-#                                         "/__/__/\n" +
-#                                         "/__/__/_\n" +
-#                                         "___/__/"
-#
-#                     ,
-#                     rhyme_template='abbcdcd',
-#                     max_attempts=50))
+print(generate_poem_new(words_to_include=[],
+                    syllables_template= "/__/__/_\n"+
+                                        "/__/__/\n" +
+                                        "/__/__/_/__/__/\n" +
+                                        "/__/__/_\n" +
+                                        "/__/__/\n" +
+                                        "/__/__/_\n" +
+                                        "___/__/"
+
+                    ,
+                    rhyme_template='abbcdcd',
+                    max_attempts=50))
 # print(generate_poem(words_to_include='',
 #                     syllables_template="_/_/_/_/\n" +
 #                                        "_/_/___/_\n" +
