@@ -176,8 +176,8 @@ def make_rhymed_lines_new(poem_lines, max_attempts, words_to_include):
 
                     word_line.append(word)
                     if i_word == len(syllable_words) - 1:
-                        pass
-                        # tail = word[2]
+                        # pass
+                        tail = word[2]
                     if i_word == 0:
                         word_lines.append(list(reversed(word_line)))
             for i, poem_line in enumerate(poem_lines):
@@ -236,7 +236,7 @@ print(generate_poem_new(words_to_include='',
 
                     ,
                     rhyme_template='abba',
-                    max_attempts=50000))
+                    max_attempts=5000))
 
 # "/__/__/_\n"+
 # "/__/__/\n" +
