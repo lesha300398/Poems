@@ -170,7 +170,7 @@ def make_rhymed_lines_new(poem_lines, max_attempts, words_to_include):
 
                     if not query_result:
                         raise NoWordsError
-                    words_to_use = set([x for x in words_to_include if not words_to_include[x]])
+                    words_to_use = set([x for x in (set(words_to_include.keys()) - set(included_words_to_include)) if not words_to_include[x]])
                     weights = [float(len(query_result) ** 10) if res[1] in words_to_use else 1 for
                                res in query_result]
                     weights = np.array(weights)
