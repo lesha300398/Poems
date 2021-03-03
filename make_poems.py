@@ -162,7 +162,7 @@ def make_rhymed_lines_new(poem_lines, max_attempts, words_to_include):
                 word_line = []
                 for i_word, syllable_word in reversed(list(enumerate(syllable_words))):
                     morph_unit = morph_words[i_word]
-                    query_result = _d.get_words(part=morph_unit.part, info=morph_unit.info, ending=tail, syllables=syllable_word)
+                    query_result = _d.get_words(part=morph_unit.part, info=morph_unit.info, ending=tail if i_word == len(syllable_words) - 1 else None, syllables=syllable_word)
 
                     if not query_result:
                         raise NoWordsError
