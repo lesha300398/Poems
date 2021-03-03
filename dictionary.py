@@ -230,7 +230,7 @@ class Dictionary:
             time = (info['time'],) if 'time' in info else range(4) #ignored
             res  = self.get_verb_rhymes(persons,gender,time, real_syll,real_end,True);
         elif(part in ["незмінне", "прийменник", "частка", "вигук","присудкове", "сполучник", "сполука", "вставне", "дієприслівник", "прислівник"]):
-            res  = self.get_other_rhymes(part, real_syll,real_end);
+            res  = self.get_other_rhymes(part, real_syll,real_end,True);
 
         return res;
     @staticmethod
