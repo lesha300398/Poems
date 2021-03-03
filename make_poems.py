@@ -200,8 +200,8 @@ def generate_poem_new(words_to_include, syllables_template, rhyme_template, max_
     attempts = 0
     while attempts < max_attempts:
         try:
-            words_to_include_new = [list(_d.get_word_indices(w).values()) for w in words_to_include]
-            words_to_include_new = [w[0] for w in words_to_include_new]
+            words_to_include_new = [(_d.get_word_indices(w[0]), w[1]) if isinstance(w, tuple) else (_d.get_word_indices(w), None) for w in words_to_include]
+            words_to_include_new = [(w[0][w[1]] if w[1] and w[1] in w[0] else list(w[0].values())[0]) for w in words_to_include_new]
             words_to_include_new = dict([(word, False) for word in words_to_include_new])
             rhyme_template = list(rhyme_template)
             syllable_lines = syllables_template.split('\n')
@@ -237,8 +237,8 @@ def generate_syllables(rhyme_template, base, mean_count, disp_count, prob_no_str
         for _ in range(max(int(np.random.normal(mean_count, disp_count)), 3)):
             to_append = base
             if np.random.rand() < prob_no_stress:
-                to_append.replace("/", "_")
-            line += base
+                to_append = to_append.replace("/", "_")
+            line += to_append
         for _ in range(len(base) - 1):
             if np.random.random() < prob_truncate:
                 line = line[:-1]
@@ -286,10 +286,10 @@ _d = Dictionary()
 #                     ,
 #                     rhyme_template='abba',
 #                     max_attempts=5000))
-rhyme_template = "abba"
-syllables_template = generate_syllables(rhyme_template=rhyme_template, base="_/", mean_count=4, disp_count=1, prob_no_stress=0.1, prob_truncate=0.3)
+rhyme_template = "abba"#"abbacddceddefgge"
+syllables_template = generate_syllables(rhyme_template=rhyme_template, base="/_", mean_count=4, disp_count=0, prob_no_stress=0, prob_truncate=0.3)
 print(syllables_template)
-print(generate_poem_new(words_to_include=["озеро", "тече"],
+print(generate_poem_new(words_to_include=["річка", ("тече", "дієслово")],
                         syllables_template=syllables_template,
                         rhyme_template=rhyme_template,
                         max_attempts=5000))
