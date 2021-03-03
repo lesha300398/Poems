@@ -135,7 +135,7 @@ def get_morph(n_words):
                               'gender': gender}),
               MorphUnit(part="дієслово",
                         info={'gender': gender,
-                              "persons": np.random.choice(range(3)),
+                              "persons": 2,#np.random.choice(range(3)),
                               "time": np.random.choice(range(3))})]
     weights = dict(zip(["іменник", "прикметник", "дієслово", "дієприслівник", "прислівник"], [5,4,5,1,1]))
     while len(result) < n_words:
@@ -162,8 +162,7 @@ def make_rhymed_lines_new(poem_lines, max_attempts, words_to_include):
                 word_line = []
                 for i_word, syllable_word in reversed(list(enumerate(syllable_words))):
                     morph_unit = morph_words[i_word]
-                    query_result = _d.get_words(part=morph_unit.part, info=morph_unit.info, ending=tail, syllables=syllable_word )
-
+                    query_result = _d.get_words(part=morph_unit.part, info=morph_unit.info, ending=tail, syllables=syllable_word)
 
                     if not query_result:
                         raise NoWordsError
@@ -177,7 +176,8 @@ def make_rhymed_lines_new(poem_lines, max_attempts, words_to_include):
 
                     word_line.append(word)
                     if i_word == len(syllable_words) - 1:
-                        tail = word[2]
+                        pass
+                        # tail = word[2]
                     if i_word == 0:
                         word_lines.append(list(reversed(word_line)))
             for i, poem_line in enumerate(poem_lines):
@@ -216,27 +216,27 @@ _d = Dictionary()
 # print(len(result))
 # # for w in map(lambda x: x.name, result):
 # #     print(w)
-print(generate_poem_new(words_to_include=[],
-                    syllables_template= "/__/__/_\n"+
-                                        "/__/__/\n" +
-                                        "/__/__/_/__/__/\n" +
-                                        "/__/__/_\n" +
-                                        "/__/__/\n" +
-                                        "/__/__/_\n" +
-                                        "___/__/"
-
-                    ,
-                    rhyme_template='abbcdcd',
-                    max_attempts=50))
-# print(generate_poem(words_to_include='',
-#                     syllables_template="_/_/_/_/\n" +
-#                                        "_/_/___/_\n" +
-#                                        "_/_/___/_\n" +
-#                                        "_/_/___/"
+# print(generate_poem_new(words_to_include=[],
+#                     syllables_template= "/__/__/_\n"+
+#                                         "/__/__/\n" +
+#                                         "/__/__/_/__/__/\n" +
+#                                         "/__/__/_\n" +
+#                                         "/__/__/\n" +
+#                                         "/__/__/_\n" +
+#                                         "___/__/"
 #
 #                     ,
-#                     rhyme_template='abba',
-#                     max_attempts=50))
+#                     rhyme_template='abbcdcd',
+#                     max_attempts=50000))
+print(generate_poem_new(words_to_include='',
+                    syllables_template="_/_/_/_/\n" +
+                                       "_/_/___/_\n" +
+                                       "_/_/___/_\n" +
+                                       "_/_/___/"
+
+                    ,
+                    rhyme_template='abba',
+                    max_attempts=50000))
 
 # "/__/__/_\n"+
 # "/__/__/\n" +
