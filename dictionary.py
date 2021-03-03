@@ -218,7 +218,7 @@ class Dictionary:
         # return array of matching words
         real_end = -1 if ending==None else ending;
         real_syll = Dictionary.convert_syllable_string_to_tuple(syllables);
-        if(real_syll[0] == 1 and part == "прикметник"):
+        if(real_syll[0] == 1 and part == "прикметник" and randrange(10)<9):
             return [];
         #print(info);
         #print(real_end);
