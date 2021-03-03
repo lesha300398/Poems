@@ -125,3 +125,6 @@ dmypy.json
 .pyre/
 sqlalchemy_example.db
 words_json/
+
+combined_tree.pickle
+
