@@ -6,6 +6,7 @@ import pickle;
 import os;
 directory = r'./current'
 
+
 def parse_json(directory):
     result =[];
     for entry in os.scandir(directory):

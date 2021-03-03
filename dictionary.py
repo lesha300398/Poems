@@ -219,18 +219,18 @@ class Dictionary:
         if(part == "іменник"):
             vidm = (info['vidm'],) if 'vidm' in info else range(7);
             gender = (info['gender'],) if 'gender' in info else range(4);
-            res  = (self.get_noun_rhymes(vidm,gender, real_syll,real_end,False))[:-1];
+            res  = (self.get_noun_rhymes(vidm,gender, real_syll,real_end,True));
         elif(part == "прикметник"):
             vidm = (info['vidm'],) if 'vidm' in info else range(7);
             gender = (info['gender'],) if 'gender' in info else range(4);
-            res  = (self.get_adj_rhymes(vidm,gender, real_syll,real_end,True))[:-1];
+            res  = self.get_adj_rhymes(vidm,gender, real_syll,real_end,True);
         elif(part == "дієслово"):
             persons = (info['persons'],) if 'persons' in info else range(3);
             gender = (info['gender'],) if 'gender' in info else range(4);
             time = (info['time'],) if 'time' in info else range(4) #ignored
-            res  = (self.get_verb_rhymes(persons,gender,time, real_syll,real_end,True))[:-1];
+            res  = self.get_verb_rhymes(persons,gender,time, real_syll,real_end,True);
         elif(part in ["незмінне", "прийменник", "частка", "вигук","присудкове", "сполучник", "сполука", "вставне", "дієприслівник", "прислівник"]):
-            res  = (self.get_other_rhymes(part, real_syll,real_end))[-1];
+            res  = self.get_other_rhymes(part, real_syll,real_end);
 
         return res;
     @staticmethod
@@ -364,6 +364,7 @@ def simple_poem(d):
 if __name__ == "__main__":
     from random import randrange;
     d = Dictionary();
+    print(d.get_words('іменник',{'gender':2},'яти','__/_'))
     '''
     word = input("input:");
     w_index = d.get_word_indices(word)['іменник'];
