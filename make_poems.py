@@ -286,10 +286,10 @@ _d = Dictionary()
 #                     ,
 #                     rhyme_template='abba',
 #                     max_attempts=5000))
-rhyme_template = "abba"#"abbacddceddefgge"
-syllables_template = generate_syllables(rhyme_template=rhyme_template, base="/_", mean_count=4, disp_count=0, prob_no_stress=0, prob_truncate=0.3)
+rhyme_template = "abbaсddc"#"abbacddceddefgge"
+syllables_template = generate_syllables(rhyme_template=rhyme_template, base="/_", mean_count=4, disp_count=0.3, prob_no_stress=0.1, prob_truncate=0.3)
 print(syllables_template)
-print(generate_poem_new(words_to_include=["річка", ("тече", "дієслово")],
+print(generate_poem_new(words_to_include=["річка", ("тече", "дієслово"), "озеро", "вода"],
                         syllables_template=syllables_template,
                         rhyme_template=rhyme_template,
                         max_attempts=5000))
